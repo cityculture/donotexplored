@@ -40,6 +40,7 @@ export default function Navbar({ user, dbUser, hasActiveSubscription, activePage
                             height={45}
                             className="h-8 sm:h-10 w-auto max-w-[140px] sm:max-w-none"
                             priority
+                            loading="eager"
                             style={{ objectFit: 'contain' }}
                             unoptimized
                         />
