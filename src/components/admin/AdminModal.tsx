@@ -48,28 +48,28 @@ export default function AdminModal({
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-300">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-gray-950/40 backdrop-blur-sm transition-opacity" 
+        className="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity" 
         onClick={onClose}
       />
       
       {/* Modal Content */}
       <div className={cn(
-        "relative w-full bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-300",
+        "relative w-full bg-zinc-950/95 text-white rounded-3xl shadow-2xl border border-white/15 overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-300 backdrop-blur-2xl",
         maxWidthClasses[maxWidth]
       )}>
         {/* Header */}
-        <div className="px-8 py-6 border-b border-gray-50 flex items-center justify-between">
-          <h2 className="text-xl font-black italic uppercase tracking-tighter text-gray-950">{title}</h2>
+        <div className="px-6 py-5 border-b border-white/10 flex items-center justify-between">
+          <h2 className="text-lg font-black italic uppercase tracking-tight text-white">{title}</h2>
           <button 
             onClick={onClose}
-            className="w-10 h-10 flex items-center justify-center bg-gray-50 rounded-xl text-gray-400 hover:text-gray-950 hover:bg-gray-100 transition-all"
+            className="w-9 h-9 flex items-center justify-center bg-zinc-900 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-all border border-white/10 cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
         
         {/* Body */}
-        <div className="p-8">
+        <div className="p-6">
           {children}
         </div>
       </div>

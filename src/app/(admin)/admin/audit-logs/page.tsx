@@ -44,14 +44,19 @@ export default async function AuditLogsPage({
   ]
 
   return (
-    <div className="space-y-12 animate-in fade-in duration-500">
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 pb-2 border-b border-white/10">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-gray-900 italic underline decoration-indigo-500 underline-offset-8">Audit Registry</h1>
-          <p className="text-gray-500 font-bold mt-2 uppercase tracking-widest text-xs">Verified historical log of all application mutations</p>
+          <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white flex items-center gap-3">
+            Audit Registry
+            <History className="h-6 w-6 text-indigo-400 inline" />
+          </h1>
+          <p className="text-xs font-semibold text-zinc-400 mt-1">
+            Verified historical log of all application security events and data mutations.
+          </p>
         </div>
         
-        <div className="flex bg-gray-50 rounded-2xl p-1.5 border border-gray-100 shadow-inner overflow-x-auto max-w-full no-scrollbar">
+        <div className="flex bg-zinc-900/80 rounded-2xl p-1 border border-white/10 overflow-x-auto max-w-full">
           {entities.map((ent) => {
             const Icon = ent.icon
             return (
@@ -59,13 +64,13 @@ export default async function AuditLogsPage({
                 key={ent.value}
                 href={`/admin/audit-logs?entity=${ent.value}`}
                 className={cn(
-                  "flex items-center gap-2 px-6 py-3 text-[10px] font-black tracking-widest rounded-xl transition-all whitespace-nowrap",
+                  "flex items-center gap-2 px-4 py-2 text-[10px] font-black tracking-widest rounded-xl transition-all whitespace-nowrap",
                   entity === ent.value 
-                    ? "bg-white text-indigo-600 shadow-xl shadow-indigo-100/50" 
-                    : "text-gray-400 hover:text-gray-900"
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30" 
+                    : "text-zinc-400 hover:text-white"
                 )}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-3.5 h-3.5" />
                 {ent.label}
               </Link>
             )
@@ -73,33 +78,33 @@ export default async function AuditLogsPage({
         </div>
       </div>
 
-      <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-2xl shadow-gray-100 overflow-hidden mb-12 min-h-[600px]">
+      <div className="rounded-3xl bg-zinc-950/70 border border-white/10 backdrop-blur-xl shadow-2xl overflow-hidden min-h-[500px]">
         <AuditLogTable logs={logs || []} />
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between pb-32 pt-8 border-t border-gray-50">
+      <div className="flex items-center justify-between pt-4 border-t border-white/10">
          <div className="flex flex-col">
-            <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-1">Pagination Control</p>
-            <p className="text-xs text-gray-500 font-black italic">
-              Page <span className="text-indigo-600 not-italic">{currentPage}</span> of the platform registry
+            <p className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Pagination Control</p>
+            <p className="text-xs text-zinc-400 font-bold italic mt-0.5">
+              Page <span className="text-indigo-400 not-italic font-mono">{currentPage}</span> of platform registry
             </p>
          </div>
-         <div className="flex items-center gap-4">
+         <div className="flex items-center gap-3">
            <Link 
              href={`/admin/audit-logs?page=${Math.max(1, currentPage - 1)}${entity !== 'all' ? `&entity=${entity}` : ''}`}
              className={cn(
-               "w-14 h-14 flex items-center justify-center rounded-2xl border border-gray-100 bg-white hover:bg-gray-50 transition-all shadow-lg shadow-gray-100 group",
+               "w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 bg-zinc-900 text-zinc-400 hover:text-white hover:bg-white/10 transition-all",
                currentPage === 1 && "opacity-30 pointer-events-none"
              )}
            >
-             <ChevronLeft className="w-6 h-6 text-gray-400 group-hover:text-indigo-600" />
+             <ChevronLeft className="w-5 h-5" />
            </Link>
            <Link 
              href={`/admin/audit-logs?page=${currentPage + 1}${entity !== 'all' ? `&entity=${entity}` : ''}`}
-             className="w-14 h-14 flex items-center justify-center rounded-2xl border border-gray-100 bg-white hover:bg-gray-50 transition-all shadow-lg shadow-gray-100 hover:scale-105 group"
+             className="w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 bg-zinc-900 text-zinc-400 hover:text-white hover:bg-white/10 transition-all"
            >
-             <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-indigo-600" />
+             <ChevronRight className="w-5 h-5" />
            </Link>
          </div>
       </div>

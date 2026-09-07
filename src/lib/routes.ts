@@ -28,9 +28,10 @@ export const ROUTES = {
     BECOME_HOST: '/members/become-host',
   },
   ADMIN: {
-    DASHBOARD: '/admin/admin-dashboard',
+    DASHBOARD: '/',
     ANALYTICS: '/admin/analytics',
     EVENTS: '/admin/events',
+    HOSTS: '/admin/hosts',
     USERS: '/admin/users',
     REPORTS: '/admin/reports',
     PAYOUTS: '/admin/payouts',

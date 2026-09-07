@@ -1,16 +1,18 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { updateSession } from './lib/supabase/middleware'
 
 /**
  * Admin panel middleware.
- * - Protects all /admin/* routes via Supabase session check
- * - Non-admin users are redirected to /login
- * - Role enforcement (admin-only) is done at the layout level
- * - In production, only accessible from admin.cityculture.in
+ * - Protects root / and /admin/* routes via cc_admin_session cookie check
+ * - Unauthenticated requests are redirected to /login
+ * - Cryptographic & role enforcement is performed in (admin)/layout.tsx
+ * - In production, strictly accessible from admin.cityculture.in
  */
 export async function proxy(request: NextRequest) {
   const hostname = request.headers.get('host') || ''
-  const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1')
+  const isLocalhost =
+    hostname.includes('localhost') ||
+    hostname.includes('127.0.0.1') ||
+    hostname.includes('0.0.0.0')
 
   // In production, restrict to admin subdomain only
   if (!isLocalhost) {
@@ -21,29 +23,26 @@ export async function proxy(request: NextRequest) {
       return new NextResponse('Access Denied', { status: 403 })
     }
 
-    // Force HTTPS
-    if (request.nextUrl.protocol !== 'https:') {
+    // Force HTTPS in production
+    if (request.nextUrl.protocol !== 'https:' && process.env.NODE_ENV === 'production') {
       const httpsUrl = request.nextUrl.clone()
       httpsUrl.protocol = 'https:'
       return NextResponse.redirect(httpsUrl)
     }
   }
 
-  // Refresh Supabase session
-  const { supabaseResponse, user } = await updateSession(request)
   const { pathname } = request.nextUrl
+  const adminSession = request.cookies.get('cc_admin_session')?.value
 
-  // All /admin/* routes require authentication
-  if (pathname.startsWith('/admin') && !user) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  // Protected routes: root / and all /admin/* routes
+  const isProtectedRoute = pathname === '/' || pathname.startsWith('/admin')
+
+  if (isProtectedRoute && !adminSession) {
+    const loginUrl = new URL('/login', request.url)
+    return NextResponse.redirect(loginUrl)
   }
 
-  // Root redirect to admin dashboard
-  if (pathname === '/') {
-    return NextResponse.redirect(new URL('/admin/admin-dashboard', request.url))
-  }
-
-  return supabaseResponse
+  return NextResponse.next()
 }
 
 export const config = {
