@@ -8,7 +8,7 @@ export function generateEventMetadata(event: EventWithDetails): Metadata {
   const category = event.category_name || event.category?.name || '';
   
   const title = `${event.title} ${city ? `in ${city}` : ''} | City Culture`
-  const description = event.meta_description || event.short_description || `Experience ${event.title} ${city ? `in ${city}` : ''}. Join the City Culture community for unique ${category.toLowerCase()} events and meetups.`
+  const description = event.meta_description || event.short_description || `Book tickets for ${event.title} ${city ? `in ${city}` : ''} on City Culture. Discover unique ${category.toLowerCase()} events, workshops, and live experiences.`
   const url = `${SITE_URL}/events/${event.slug}`
   const image = event.cover_image_url || `${SITE_URL}/api/og/event/${event.slug}`
   
@@ -18,11 +18,13 @@ export function generateEventMetadata(event: EventWithDetails): Metadata {
     category,
     'City Culture',
     'Events',
-    'Meetups',
-    'Making Friends',
-    'Stranger Meetups',
-    'Offline Events',
-    'Community'
+    'Event Tickets',
+    'Book Tickets',
+    'Host Events',
+    'Sell Tickets',
+    'Live Events',
+    'Workshops',
+    'Experiences'
   ].filter(Boolean).join(', ')
 
   return {

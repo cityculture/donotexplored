@@ -31,6 +31,7 @@ const navItems = [
   { name: 'Reports', href: '/admin/reports', icon: Flag, desc: 'Flagged reports & complaints' },
   { name: 'Users', href: '/admin/users', icon: Users, desc: 'Member & host accounts' },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3, desc: 'Platform performance' },
+  { name: 'Discounts', href: '/admin/subscription-discounts', icon: Sparkles, desc: 'Membership promo codes' },
   { name: 'Payouts', href: '/admin/payouts', icon: CreditCard, desc: 'Financial transactions' },
   { name: 'Categories', href: '/admin/categories', icon: Tags, desc: 'Taxonomy & tags' },
   { name: 'Audit Logs', href: '/admin/audit-logs', icon: History, desc: 'System security trace' },
