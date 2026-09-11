@@ -1,7 +1,7 @@
 import 'server-only';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3001';
-const INTERNAL_API_SECRET = process.env.INTERNAL_API_SECRET || 'cc_secret_42_xyz';
+const INTERNAL_API_SECRET = process.env.INTERNAL_API_SECRET || '';
 
 export interface DBFilter {
   type: string;
