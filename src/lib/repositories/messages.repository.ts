@@ -6,13 +6,13 @@ type MessageRow = Database['public']['Tables']['messages']['Row']
 
 export type ConversationWithParticipants = ConversationRow & {
   other_participant: {
-    anonymous_alias: string
+    username: string
   } | null
 }
 
 export type MessageWithSender = MessageRow & {
   sender: {
-    anonymous_alias: string
+    username: string
   } | null
 }
 
@@ -37,8 +37,8 @@ export async function getConversations(userId: string): Promise<ConversationWith
   }
 
 interface JoinedConversation extends ConversationRow {
-  p1: { anonymous_alias: string } | null
-  p2: { anonymous_alias: string } | null
+  p1: { username: string } | null
+  p2: { username: string } | null
 }
 
   // Format response to always expose the "other" participant's alias
@@ -97,7 +97,7 @@ export async function getMessages(conversationId: string, userId: string): Promi
   }
 
   interface JoinedMessage extends MessageRow {
-    sender: { anonymous_alias: string } | { anonymous_alias: string }[] | null
+    sender: { username: string } | { username: string }[] | null
   }
 
   // Clean data structure returned by PostgREST
