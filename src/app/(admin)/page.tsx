@@ -72,7 +72,7 @@ export default async function AdminDashboardPage() {
 
   // Pending host approvals count
   const { count: pendingHosts } = await (supabase
-    .from('host_pages') as any)
+    .from('users') as any)
     .select('*', { count: 'exact', head: true })
     .eq('is_approved', false)
 

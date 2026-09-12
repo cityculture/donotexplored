@@ -23,7 +23,7 @@ export default async function AdminPayoutsPage({
 
   const { data: payouts } = await (supabase
     .from('payouts') as any)
-    .select('*, host:users(username, email, host_pages(id, display_name)), event:events(title)')
+    .select('*, host:users(username, email, id, full_name), event:events(title)')
     .eq('status', currentStatus)
     .order('created_at', { ascending: false })
 
@@ -88,11 +88,10 @@ export default async function AdminPayoutsPage({
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      {payout.host?.host_pages?.[0] ? (
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Host Page</span>
-                          <span className="text-xs font-bold text-white">{payout.host.host_pages[0].display_name}</span>
-                          <span className="text-[9px] font-mono text-zinc-500">ID: {payout.host.host_pages[0].id}</span>
+                      {payout.host ? (
+                        <div className="flex flex-col">
+                          <span className="text-xs font-bold text-white">{payout.host.full_name || payout.host.username}</span>
+                          <span className="text-[9px] font-mono text-zinc-500">ID: {payout.host.id}</span>
                         </div>
                       ) : (
                         <span className="text-[10px] font-bold text-red-400 uppercase tracking-widest italic">No page linked</span>

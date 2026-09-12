@@ -26,7 +26,7 @@ import { auth, signOut } from '@/lib/firebase/client'
 
 const navItems = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard, desc: 'Overview & statistics' },
-  { name: 'Hosts', href: '/admin/hosts', icon: ShieldCheck, desc: 'Host verification & approvals' },
+
   { name: 'Events', href: '/admin/events', icon: Calendar, desc: 'Moderation & listings' },
   { name: 'Reports', href: '/admin/reports', icon: Flag, desc: 'Flagged reports & complaints' },
   { name: 'Users', href: '/admin/users', icon: Users, desc: 'Member & host accounts' },

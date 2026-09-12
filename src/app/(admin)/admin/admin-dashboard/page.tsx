@@ -136,7 +136,7 @@ export default async function AdminDashboardPage() {
   let pendingHosts = 0
   try {
     const pendingHostsResult = await queryBackendDb({
-      table: 'host_pages',
+      table: 'users',
       action: 'select',
       selectQuery: 'id',
       filters: [{ type: 'eq', args: ['is_approved', false] }]

@@ -125,32 +125,30 @@ export async function toggleSponsoredEvent(eventId: string, isSponsored: boolean
   return { success: true }
 }
 
-export async function approveHostAction(hostProfileId: string, approved: boolean) {
+export async function approveHostAction(userId: string, approved: boolean) {
   const supabase = await createClient()
   const admin = await validateAdminRole(supabase)
   if (!isAdminAuthSuccess(admin)) return { success: false, error: admin.error }
 
-  // 2. Update host_profiles
-  const { data: hostProfile, error: updateError } = await supabase
-    .from('host_pages')
+  // 2. Update users
+  const { data: userProfile, error: updateError } = await supabase
+    .from('users')
     .update({ 
       is_approved: approved,
-      approved_by: admin.user.id,
-      approved_at: new Date().toISOString()
     })
-    .eq('id', hostProfileId)
-    .select('user_id, display_name')
+    .eq('id', userId)
+    .select('id, full_name')
     .single()
 
-  if (updateError || !hostProfile) return { success: false, error: updateError?.message || 'Failed to update host profile' }
+  if (updateError || !userProfile) return { success: false, error: updateError?.message || 'Failed to update user profile' }
 
   // 3. Audit Logs
   await logAuditAction(supabase, {
     actorId: admin.user.id,
     actorRole: admin.role,
     action: approved ? 'host.approved' : 'host.rejected',
-    entityType: 'host_profile',
-    entityId: hostProfileId,
+    entityType: 'user',
+    entityId: userId,
     newValues: { is_approved: approved }
   })
 
@@ -158,8 +156,8 @@ export async function approveHostAction(hostProfileId: string, approved: boolean
   const { sendNotification } = await import('@/lib/notifications/send')
   
   if (approved) {
-    await sendNotification(hostProfile.user_id, 'host_approved', {
-      host_name: hostProfile.display_name
+    await sendNotification(userProfile.id, 'host_approved', {
+      host_name: userProfile.full_name || 'Host'
     })
   }
 
@@ -377,7 +375,7 @@ export async function processPayoutAction(payoutId: string) {
   // 1. Fetch payout details
   const { data: payout, error: fetchError } = await supabase
     .from('payouts')
-    .select('*, host:users(email, host_pages(razorpay_account_id))')
+    .select('*, host:users(email, razorpay_account_id)')
     .eq('id', payoutId)
     .single()
 
@@ -412,25 +410,16 @@ export async function processPayoutAction(payoutId: string) {
   return { success: true }
 }
 
-export async function verifyHostAction(hostId: string, verified: boolean) {
+export async function verifyHostAction(userId: string, verified: boolean) {
   const supabase = await createClient()
   const admin = await validateAdminRole(supabase)
   if (!isAdminAuthSuccess(admin)) return { success: false, error: admin.error }
-
-  // 1. Get user_id from host_profile
-  const { data: hostProfile, error: fetchError } = await supabase
-    .from('host_pages')
-    .select('user_id')
-    .eq('id', hostId)
-    .single()
-
-  if (fetchError || !hostProfile) return { success: false, error: 'Host not found' }
 
   // 2. Update users table (standard verification field)
   const { error: updateError } = await supabase
     .from('users')
     .update({ is_verified: verified })
-    .eq('id', hostProfile.user_id)
+    .eq('id', userId)
 
   if (updateError) return { success: false, error: updateError.message }
 
@@ -439,8 +428,8 @@ export async function verifyHostAction(hostId: string, verified: boolean) {
     actorId: admin.user.id,
     actorRole: admin.role,
     action: verified ? 'host.verified' : 'host.unverified',
-    entityType: 'host_profile',
-    entityId: hostId
+    entityType: 'user',
+    entityId: userId
   })
 
   revalidatePath('/admin/hosts', 'page')

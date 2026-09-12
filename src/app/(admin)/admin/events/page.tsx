@@ -27,7 +27,7 @@ export default async function AdminEventsPage({
 
   let query = (supabase
     .from('events') as any)
-    .select('*, host:users(username), host_page:host_pages(id, display_name)')
+    .select('*, host:users(username, full_name)')
     .order('created_at', { ascending: false })
 
   if (status !== 'all') query = query.eq('status', status)
@@ -138,7 +138,7 @@ export default async function AdminEventsPage({
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-0.5 min-w-0">
                         <span className="truncate max-w-[150px] font-black italic text-zinc-200 group-hover:text-indigo-400 transition-colors">
-                          {event.host_page?.display_name || 'SYSTEM'}
+                          {event.host?.full_name || event.host?.username || 'SYSTEM'}
                         </span>
                         <div className="flex items-center gap-1 text-[10px] text-zinc-500 font-mono">
                           <User className="w-3 h-3" />
